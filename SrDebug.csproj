@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="Config.props" />
+    <Import Project="..\..\Managed.Games\Assemblies.props" />
+    <Import Project="..\..\Managed.UnityEngine\UnityEngine.Auto.props" />
+
+    <PropertyGroup>
+        <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net35'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\PluginManager.Core\PluginManager.Core.csproj">
+            <Private>False</Private>
+        </ProjectReference>
+    </ItemGroup>
+</Project>
