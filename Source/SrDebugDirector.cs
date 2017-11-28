@@ -19,8 +19,8 @@ public class SrDebugDirector : MonoBehaviour
 
     // Debug Settings
     // --------------------------------------------------------------------------------
-    private static bool _debug = true;
-    private static bool _showHelp = true;
+    private bool _debug;
+    private bool _showHelp;
     
     private bool _noclip;
     private bool _infiniteEnergy;
@@ -43,6 +43,8 @@ public class SrDebugDirector : MonoBehaviour
     {
         // set the default help menu font
         _helpFont = Font.CreateDynamicFontFromOSFont("Consolas", 18);
+        _debug = true;
+        _showHelp = true;
     }
 
     /// <summary>Handles debugging features</summary>
