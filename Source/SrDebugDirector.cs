@@ -227,6 +227,10 @@ public class SrDebugDirector : MonoBehaviour
         if (!_showHelp)
             return;
 
+        Font oldFont = GUI.skin.label.font;
+        TextAnchor oldAnchor = GUI.skin.label.alignment;
+        Color oldTextColor = GUI.skin.label.normal.textColor;
+
         GUI.skin.label.font = _helpFont;
         GUI.skin.label.alignment = TextAnchor.LowerRight;
 
@@ -267,5 +271,9 @@ public class SrDebugDirector : MonoBehaviour
 
         GUI.skin.label.normal.textColor = Color.white;
         GUI.Label(new Rect(0, 0, Screen.width, Screen.height), helpMessage);
+
+        GUI.skin.label.font = oldFont;
+        GUI.skin.label.alignment = oldAnchor;
+        GUI.skin.label.normal.textColor = oldTextColor;
     }
 }
