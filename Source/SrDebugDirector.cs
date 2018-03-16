@@ -166,7 +166,7 @@ public class SrDebugDirector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha9) && _playerState)
         {
             Console.WriteLine("DEBUG: Fill Ammo");
-            _playerState?.Ammo?.DebugFillRandomAmmo(_playerState.GetMaxAmmo());
+            _playerState?.Ammo?.DebugFillRandomAmmo();
         }
 
         // toggle infinite energy
@@ -183,7 +183,7 @@ public class SrDebugDirector : MonoBehaviour
         
         // refill inventory
         if (Input.GetKeyDown(KeyCode.L) && _playerState)
-            _playerState?.Ammo?.DebugRefillAmmo(_playerState.GetMaxAmmo());
+            _playerState?.Ammo?.DebugRefillAmmo();
         
         // toggle noclip
         if (Input.GetKeyDown(KeyCode.N) && _player)

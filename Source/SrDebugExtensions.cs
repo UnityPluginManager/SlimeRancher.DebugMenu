@@ -124,7 +124,7 @@ public static class SrDebugExtensions
     /// <summary>Fills the player's inventory with random items</summary>
     /// <param name="self">The Ammo instance</param>
     /// <param name="fillTo"></param>
-    public static void DebugFillRandomAmmo(this Ammo self, int fillTo)
+    public static void DebugFillRandomAmmo(this Ammo self)
     {
         var potentialAmmo = GetPrivateField<Ammo, GameObject[]>("potentialAmmo", self);
         var numSlots = GetPrivateField<Ammo, int>("numSlots", self);
@@ -135,6 +135,8 @@ public static class SrDebugExtensions
 
         for (var i = 0; i < numSlots; i++)
         {
+            int fillTo = self.GetSlotMaxCount(i);
+
             // pick a random item to insert into the slot
             var plucked = Randoms.SHARED.Pluck(new List<GameObject>(potentialAmmo), null);
             
@@ -160,7 +162,7 @@ public static class SrDebugExtensions
     /// <summary>Refills the player's inventory</summary>
     /// <param name="self">The Ammo instance</param>
     /// <param name="fillTo"></param>
-    public static void DebugRefillAmmo(this Ammo self, int fillTo)
+    public static void DebugRefillAmmo(this Ammo self)
     {
         var ammoSlot = typeof(Ammo).GetNestedType("Slot", BindingFlags.NonPublic | BindingFlags.Instance);
         var slotCount = ammoSlot.GetField("count");
@@ -169,6 +171,8 @@ public static class SrDebugExtensions
 
         for (var i = 0; i < numSlots; i++)
         {
+            int fillTo = self.GetSlotMaxCount(i);
+
             if (slots[i] != null)
                 slotCount?.SetValue(slots[i], fillTo);
             else if (i == numSlots - 1) // refill water if slot empty
