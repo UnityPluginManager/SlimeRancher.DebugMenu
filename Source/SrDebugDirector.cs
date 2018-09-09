@@ -63,8 +63,14 @@ public class SrDebugDirector : MonoBehaviour
             _inputDir = FindObjectOfType<InputDirector>();
             if (_inputDir) // prevent user from submitting bug reports.
             {
-                _inputDir.bugReportPrefab = new GameObject();
-                _inputDir.bugReportPrefab.SetActive(false);
+                var bugReportUI = _inputDir.bugReportPrefab.GetComponentInChildren<BugReportUI>();
+                bugReportUI.submitButton.interactable = false;
+                bugReportUI.summaryField.interactable = false;
+                bugReportUI.descField.interactable = false;
+
+                bugReportUI.summaryField.text = "Debug Menu Mod installed - Reporting Issues is deactivated";
+                bugReportUI.descField.text = "Notice: While this debug menu mod is active, you will not be able to report bugs. " +
+                    "This mod is not supported by Monomi Park and never will be.";
             }
         }
         
