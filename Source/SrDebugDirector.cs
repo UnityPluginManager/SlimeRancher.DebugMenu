@@ -63,14 +63,25 @@ public class SrDebugDirector : MonoBehaviour
             _inputDir = FindObjectOfType<InputDirector>();
             if (_inputDir) // prevent user from submitting bug reports.
             {
-                _inputDir.bugReportPrefab = new GameObject();
-                _inputDir.bugReportPrefab.SetActive(false);
+                var bugReportUI = _inputDir.bugReportPrefab.GetComponentInChildren<BugReportUI>();
+                bugReportUI.submitButton.interactable = false;
+                bugReportUI.summaryField.interactable = false;
+                bugReportUI.descField.interactable = false;
+
+                bugReportUI.summaryField.text = "Debug Menu Mod installed - Reporting Issues is deactivated";
+                bugReportUI.descField.text = "Notice: While this debug menu mod is active, you will not be able to report bugs. " +
+                    "This mod is not supported by Monomi Park and never will be.";
             }
         }
         
         // retrieve object and component references
         if (!_player) _player = GameObject.Find("SimplePlayer");
-        if (!_fpController) _fpController = _player?.GetComponent<vp_FPController>();
+        if (!_fpController)
+        {
+            _fpController = _player?.GetComponent<vp_FPController>();
+            if (_noclip)
+                StartNoclip();
+        }
         if (!_camera) _camera = GameObject.Find("FPSCamera");
         if (!_hudUi) _hudUi = GameObject.Find("HudUI");
         
@@ -188,8 +199,10 @@ public class SrDebugDirector : MonoBehaviour
         // toggle noclip
         if (Input.GetKeyDown(KeyCode.N) && _player)
         {
-            _noclip = !_noclip;
-            _noclipPos = _player.transform.position;
+            if (!_noclip)
+                StartNoclip();
+            else
+                StopNoclip();
         }
 
         // force the game to save
@@ -275,5 +288,29 @@ public class SrDebugDirector : MonoBehaviour
         GUI.skin.label.font = oldFont;
         GUI.skin.label.alignment = oldAnchor;
         GUI.skin.label.normal.textColor = oldTextColor;
+    }
+
+
+    public void StartNoclip()
+    {
+        if (_player && _fpController)
+        {
+            _noclip = true;
+            _noclipPos = _player.transform.position;
+
+            // Set player object with collision box to layer "RaycastOnly"
+            _fpController.gameObject.layer = 14;
+        }
+    }
+
+    public void StopNoclip()
+    {
+        if (_fpController)
+        {
+            _noclip = false;
+
+            // Set player object with collision box back to layer "Player"
+            _fpController.gameObject.layer = 8;
+        }
     }
 }

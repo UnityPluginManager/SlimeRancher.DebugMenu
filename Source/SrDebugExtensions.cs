@@ -6,13 +6,27 @@ using UnityEngine;
 /// <summary>Debug functions that were removed from the game</summary>
 public static class SrDebugExtensions
 {
-    /// <summary>Retrieves a private field of type T2 from a class instance of type T1</summary>
-    /// <param name="fieldName">The name of the field to retrieve</param>
-    /// <param name="instance">The instance to retrieve the field from</param>
-    private static T2 GetPrivateField<T1, T2>(string fieldName, T1 instance)
+    public static BindingFlags all = BindingFlags.Public
+        | BindingFlags.NonPublic
+        | BindingFlags.Instance
+        | BindingFlags.Static
+        | BindingFlags.GetField
+        | BindingFlags.SetField
+        | BindingFlags.GetProperty
+        | BindingFlags.SetProperty;
+
+    /// <summary>Retrieves a field/property (which can be private, but doesn't have to be) 
+	/// of type T2 from a class instance of type T1</summary>
+    /// <param name="fieldName">The name of the field/property to retrieve</param>
+    /// <param name="instance">The instance to retrieve the field/property from</param>
+    private static T2 GetFieldOrPropertyValue<T1, T2>(string fieldName, T1 instance)
     {
-        var field = typeof(T1).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-        return (T2) field?.GetValue(instance);
+        var field = typeof(T1).GetField(fieldName, all);
+        if (field != null)
+            return (T2)field?.GetValue(instance);
+
+        var property = typeof(T1).GetProperty(fieldName, all);
+        return (T2)property?.GetValue(instance, null);
     }
 
     // PediaDirector
@@ -22,8 +36,8 @@ public static class SrDebugExtensions
     /// <param name="self">The PediaDirector instance</param>
     public static void DebugClearUnlocked(this PediaDirector self)
     {
-        var unlock = typeof(PediaDirector).GetMethod("Unlock", BindingFlags.NonPublic | BindingFlags.Instance);
-        GetPrivateField<PediaDirector, HashSet<PediaDirector.Id>>("unlocked", self).Clear();
+        var unlock = typeof(PediaDirector).GetMethod("Unlock", all);
+        GetFieldOrPropertyValue<PediaDirector, HashSet<PediaDirector.Id>>("unlocked", self).Clear();
         foreach (var t in self.initUnlocked)
             unlock.Invoke(self, new object[] { t });
     }
@@ -32,7 +46,7 @@ public static class SrDebugExtensions
     /// <param name="self">The PediaDirector instance</param>
     public static void DebugAllUnlocked(this PediaDirector self)
     {
-        var unlock = typeof(PediaDirector).GetMethod("Unlock", BindingFlags.NonPublic | BindingFlags.Instance);
+        var unlock = typeof(PediaDirector).GetMethod("Unlock", all);
         foreach (PediaDirector.Id id in Enum.GetValues(typeof(PediaDirector.Id)))
             unlock.Invoke(self, new object[] { id });
     }
@@ -44,14 +58,14 @@ public static class SrDebugExtensions
     /// <param name="self">The TutorialDirector instance</param>
     public static void DebugClearCompleted(this TutorialDirector self)
     {
-        GetPrivateField<TutorialDirector, HashSet<TutorialDirector.Id>>("completed", self).Clear();
+        GetFieldOrPropertyValue<TutorialDirector, HashSet<TutorialDirector.Id>>("completed", self).Clear();
     }
 
     /// <summary>Completes all tutorials</summary>
     /// <param name="self">The TutorialDirector instance</param>
     public static void DebugAllCompleted(this TutorialDirector self)
     {
-        var completed = GetPrivateField<TutorialDirector, HashSet<TutorialDirector.Id>>("completed", self);
+        var completed = GetFieldOrPropertyValue<TutorialDirector, HashSet<TutorialDirector.Id>>("completed", self);
         foreach (TutorialDirector.Id id in Enum.GetValues(typeof(TutorialDirector.Id))) completed.Add(id);
     }
 
@@ -62,18 +76,18 @@ public static class SrDebugExtensions
     /// <param name="self">The AchievementsDirector instance</param>
     public static void DebugClearAwarded(this AchievementsDirector self)
     {
-        GetPrivateField<AchievementsDirector, HashSet<AchievementsDirector.Achievement>>("earnedAchievements", self).Clear();
-        GetPrivateField<AchievementsDirector, Dictionary<AchievementsDirector.BoolStat, bool>>("boolStatDict", self).Clear();
-        GetPrivateField<AchievementsDirector, Dictionary<AchievementsDirector.IntStat, int>>("intStatDict", self).Clear();
-        GetPrivateField<AchievementsDirector, Dictionary<AchievementsDirector.EnumStat, HashSet<Enum>>>("enumStatDict", self).Clear();
-        GetPrivateField<AchievementsDirector, Dictionary<AchievementsDirector.GameFloatStat, float>>("gameFloatStatDict", self).Clear();
+        GetFieldOrPropertyValue<AchievementsDirector, HashSet<AchievementsDirector.Achievement>>("earnedAchievements", self).Clear();
+        GetFieldOrPropertyValue<AchievementsDirector, Dictionary<AchievementsDirector.BoolStat, bool>>("boolStatDict", self).Clear();
+        GetFieldOrPropertyValue<AchievementsDirector, Dictionary<AchievementsDirector.IntStat, int>>("intStatDict", self).Clear();
+        GetFieldOrPropertyValue<AchievementsDirector, Dictionary<AchievementsDirector.EnumStat, HashSet<Enum>>>("enumStatDict", self).Clear();
+        GetFieldOrPropertyValue<AchievementsDirector, Dictionary<AchievementsDirector.GameFloatStat, float>>("gameFloatStatDict", self).Clear();
     }
 
     /// <summary>Awards all achievements</summary>
     /// <param name="self">The AchievementsDirector instance</param>
     public static void DebugAllAwarded(this AchievementsDirector self)
     {
-        var earnedAchievements = GetPrivateField<AchievementsDirector, HashSet<AchievementsDirector.Achievement>>("earnedAchievements", self);
+        var earnedAchievements = GetFieldOrPropertyValue<AchievementsDirector, HashSet<AchievementsDirector.Achievement>>("earnedAchievements", self);
         foreach (AchievementsDirector.Achievement achievement in Enum.GetValues(typeof(AchievementsDirector.Achievement))) earnedAchievements.Add(achievement);
     }
 
@@ -84,7 +98,7 @@ public static class SrDebugExtensions
     /// <param name="self">The ProgressDirector instance</param>
     public static void DebugClearProgress(this ProgressDirector self)
     {
-        GetPrivateField<ProgressDirector, Dictionary<ProgressDirector.ProgressType, int>>("progressDict", self).Clear();
+        GetFieldOrPropertyValue<ProgressDirector, Dictionary<ProgressDirector.ProgressType, int>>("progressDict", self).Clear();
     }
 
     /// <summary>Unlocks all progress</summary>
@@ -126,12 +140,12 @@ public static class SrDebugExtensions
     /// <param name="fillTo"></param>
     public static void DebugFillRandomAmmo(this Ammo self)
     {
-        var potentialAmmo = GetPrivateField<Ammo, GameObject[]>("potentialAmmo", self);
-        var numSlots = GetPrivateField<Ammo, int>("numSlots", self);
+        var potentialAmmo = GetFieldOrPropertyValue<Ammo, GameObject[]>("potentialAmmo", self);
+        var numSlots = GetFieldOrPropertyValue<Ammo, int>("numSlots", self);
 
-        var ammoSlot = typeof(Ammo).GetNestedType("Slot", BindingFlags.NonPublic | BindingFlags.Instance);
-        var slots = GetPrivateField<Ammo, object[]>("slots", self);
-        var emotions = ammoSlot.GetField("emotions", BindingFlags.Public | BindingFlags.Instance);
+        var ammoSlot = typeof(Ammo).GetNestedType("Slot", all);
+        var slots = GetFieldOrPropertyValue<Ammo, object[]>("slots", self);
+        var emotions = ammoSlot.GetField("emotions", all);
 
         for (var i = 0; i < numSlots; i++)
         {
@@ -157,6 +171,9 @@ public static class SrDebugExtensions
             };
             emotions?.SetValue(slots[i], emotionData);
         }
+
+        // Refill Ammo again, because some mods might change the max value depending on what is in the slot
+        DebugRefillAmmo(self);
     }
 
     /// <summary>Refills the player's inventory</summary>
@@ -164,10 +181,10 @@ public static class SrDebugExtensions
     /// <param name="fillTo"></param>
     public static void DebugRefillAmmo(this Ammo self)
     {
-        var ammoSlot = typeof(Ammo).GetNestedType("Slot", BindingFlags.NonPublic | BindingFlags.Instance);
+        var ammoSlot = typeof(Ammo).GetNestedType("Slot", all);
         var slotCount = ammoSlot.GetField("count");
-        var numSlots = GetPrivateField<Ammo, int>("numSlots", self);
-        var slots = GetPrivateField<Ammo, object[]>("slots", self);
+        var numSlots = GetFieldOrPropertyValue<Ammo, int>("numSlots", self);
+        var slots = GetFieldOrPropertyValue<Ammo, object[]>("slots", self);
 
         for (var i = 0; i < numSlots; i++)
         {
