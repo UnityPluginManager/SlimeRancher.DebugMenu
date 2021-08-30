@@ -1,0 +1,7 @@
+{
+  "id": "srdebug",
+  "name": "Debug Menu 1.4.0",
+  "author": "KomiksPL and CabbageCrow and DaZombieKiller",
+  "description": "Port of https://github.com/UnityPluginManager/SlimeRancher.DebugMenu to 1.4.0",
+  "version":  "1.0"
+}
