@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using MonomiPark.SlimeRancher.DataModel;
-using SrDebugDirector;
 /// <summary>Debug functions that were removed from the game</summary>
 public static class SrDebugExtensions
 {
@@ -63,10 +62,8 @@ public static class SrDebugExtensions
     /// <param name="self">The PediaDirector instance</param>
     public static void DebugAllUnlocked(this PediaDirector self)
     {
-        var unlock = typeof(PediaDirector).GetMethod("Unlock", all);
         PediaDirector.Id[] id = (PediaDirector.Id[]) Enum.GetValues(typeof(PediaDirector.Id));
-
-        if (unlock is not null) unlock.Invoke(self, new object[] {id});
+        self.Unlock(id);
     }
 
     // TutorialDirector
@@ -98,9 +95,7 @@ public static class SrDebugExtensions
     /// <param name="self">The AchievementsDirector instance</param>
     public static void DebugClearAwarded(this AchievementsDirector self)
     {
-        var unlock = typeof(ProfileAchievesModel).GetMethod("Reset", all);
-
-        if (unlock is not null) unlock.Invoke(self.profileAchievesModel, new object[] { });
+        self.profileAchievesModel.Reset();
     }
     
 
