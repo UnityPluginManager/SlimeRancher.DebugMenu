@@ -56,7 +56,7 @@ public static class SrDebugExtensions
     /// <param name="self">The PediaDirector instance</param>
     public static void DebugClearUnlocked(this PediaDirector self)
     {
-        PediaModelInstance.pediamodel.unlocked.Clear();
+        self.pediaModel.unlocked.Clear();
     }
 
     /// <summary>Unlocks all pedia entries</summary>
@@ -75,7 +75,7 @@ public static class SrDebugExtensions
     /// <summary>Clears all completed tutorials</summary>
     public static void DebugClearCompleted(this TutorialDirector self)
     {
-        TutorialsModelInstance.tutorialsmodel.completedIds.Clear();
+        self.tutModel.completedIds.Clear();
 
     }
 
@@ -85,7 +85,7 @@ public static class SrDebugExtensions
     {
         foreach (TutorialDirector.Id id in Enum.GetValues(typeof(TutorialDirector.Id)))
         {
-            TutorialsModelInstance.tutorialsmodel.completedIds.Add(id);
+            self.tutModel.completedIds.Add(id);
 
         }
         
@@ -100,7 +100,7 @@ public static class SrDebugExtensions
     {
         var unlock = typeof(ProfileAchievesModel).GetMethod("Reset", all);
 
-        if (unlock is not null) unlock.Invoke(ProfileAchievesModelInstance.profileachievesmodel, new object[] { });
+        if (unlock is not null) unlock.Invoke(self.profileAchievesModel, new object[] { });
     }
     
 
@@ -111,7 +111,7 @@ public static class SrDebugExtensions
     /// <param name="self">The ProgressDirector instance</param>
     public static void DebugClearProgress(this ProgressDirector self)
     {
-        ProgressModelInstance.progressmodel.progressDict.Clear();
+        self.model.progressDict.Clear();
     }
 
     /// <summary>Unlocks all progress</summary>
